@@ -39,33 +39,38 @@
 </div>
 
 <script>
-  // Fetch and display products
-  async function fetchProducts() {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/products/');
-      const products = response.data;
-      const productList = document.getElementById('product-list');
-      productList.innerHTML = '';  // Clear existing content
-      products.forEach(product => {
-        const productCard = `
-          <div class="col-md-4 mb-3">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">${product.name}</h5>
-                <p class="card-text">${product.description}</p>
-                <p class="card-text"><strong>Price:</strong> $${product.price}</p>
-                <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
-                <a href="product_detail.html?id=${product.id}" class="btn btn-info">View Product</a> <!-- Updated link -->
-              </div>
+// Fetch and display products
+async function fetchProducts() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/products/');
+    const products = response.data;
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = '';  // Clear existing content
+    products.forEach(product => {
+      // Extract categories and format them as a string
+      const categories = product.categories.map(cat => cat.name).join(', ');
+
+      const productCard = `
+        <div class="col-md-4 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">${product.name}</h5>
+              <p class="card-text">${product.description}</p>
+              <p class="card-text"><strong>Price:</strong> $${product.price}</p>
+              <p class="card-text"><strong>Categories:</strong> ${categories ? categories : 'None'}</p> <!-- Display categories -->
+              <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Delete</button>
+              <a href="product_detail.html?id=${product.id}" class="btn btn-info">View Product</a>
             </div>
           </div>
-        `;
-        productList.innerHTML += productCard;
-      });
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
+        </div>
+      `;
+      productList.innerHTML += productCard;
+    });
+  } catch (error) {
+    console.error('Error fetching products:', error);
   }
+}
+
 
 // Fetch and display categories
 async function fetchCategories() {
