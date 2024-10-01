@@ -8,6 +8,8 @@ class CategorySerializer(serializers.ModelSerializer):
         
 
 class ProductSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True)
+    
     class Meta:
         model = Product
         fields = '__all__'
